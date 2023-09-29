@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Button, Container, Image } from "react-bootstrap";
+import { Button, Container, Image, Modal } from "react-bootstrap";
 
 import { DataTable } from "components/data-tables";
 import { NewFile } from "components/modals";
@@ -143,6 +143,9 @@ const Dashboard: FC = () => {
   const [newState, setNewState] = React.useState({
     model: false,
   });
+  const [deletedocs, setDeletedocs] = React.useState({
+    model: false,
+  });
 
   return (
     <>
@@ -233,6 +236,21 @@ const Dashboard: FC = () => {
           </Container>
         </div>
         <NewFile newState={newState} setNewState={setNewState} />
+        <Modal>
+          <Modal.Header className="border-0 mt-4 ps-4 d-flex justify-content-center align-items-center">
+            <Modal.Title className="mb-0">Confirm action</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="mb-0 mt-0 ps-4 pt-0 d-flex justify-content-center align-items-center">
+            The following action is irreversible, once deleted cannot be retrieved. Are you sure to
+            delete this project?
+          </Modal.Body>
+          <Modal.Footer className="border-0 ms-2 mt-2 mb-2 d-flex justify-content-center align-items-center">
+            <button className="btn ms-3 bg-white">Cancel</button>
+            <Button variant="primary" className="text-white" style={{ width: 130 }}>
+              Yes, save
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     </>
   );
