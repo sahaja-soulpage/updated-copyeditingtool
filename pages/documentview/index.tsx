@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import { Breadcrumb } from "react-bootstrap";
 
 // import ExPdf from "components/ExPdf";
@@ -8,13 +8,17 @@ const Documentview: FC = () => {
     ssr: false,
   });
 
-  const [pdffile, setPdfFile] = useState(
-    "https://soulpageit.com/wp-content/uploads/2022/01/Ebook.pdf"
-  );
+  // useEffect(() => {
+  //   console.log(highlights, "highlightshighlightshighlights");
+  // }, []);
 
-  useEffect(() => {
-    setPdfFile(pdffile);
-  }, []);
+  // const [pdffile, setPdfFile] = useState(
+  //   "https://soulpageit.com/wp-content/uploads/2022/01/Ebook.pdf"
+  // );
+
+  // useEffect(() => {
+  //   setPdfFile(pdffile);
+  // }, []);
 
   return (
     <>
@@ -22,11 +26,10 @@ const Documentview: FC = () => {
         <div className="p-5 mx-3 ">
           <Breadcrumb>
             <Breadcrumb.Item>My Files</Breadcrumb.Item>
-            <Breadcrumb.Item>New File1</Breadcrumb.Item>
+            <Breadcrumb.Item className="fw-600">New File1</Breadcrumb.Item>
           </Breadcrumb>
-          <div className="dashboard-new-proofs text-start w-100 p-4 gap-3 pt-2">
-            <ExPdf highlights={[]} url="url" />
-          </div>
+          {/* <div className="dashboard-new-proofs text-start w-100 p-4 gap-3 pt-2"> */}
+          <ExPdf />
         </div>
       </div>
     </>

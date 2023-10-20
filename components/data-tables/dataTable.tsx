@@ -117,10 +117,11 @@ interface IListTableProps {
   columns: any;
   data: any;
   progress?: any;
+  row?: any;
 }
 
 const ListTable: FC<IListTableProps> = (props) => {
-  const { columns, data, progress } = props;
+  const { columns, data, row, progress } = props;
   return (
     <DataTable
       theme="solarized"
@@ -130,11 +131,14 @@ const ListTable: FC<IListTableProps> = (props) => {
       columns={columns}
       noHeader
       defaultSortAsc
+      pagination={row ? true : false}
+      paginationPerPage={row ? row : 10}
+      paginationRowsPerPageOptions={row ? [5, 10] : [5, 10, 15, 20]}
       paginationComponentOptions={{
-        rowsPerPageText: "Rows per page:",
+        rowsPerPageText: row ? "Previewing" : "Rows per page:",
         rangeSeparatorText: "of",
         noRowsPerPage: false,
-        selectAllRowsItem: false,
+        selectAllRowsItem: row ? true : false,
         selectAllRowsItemText: "All",
       }}
       fixedHeader={true}

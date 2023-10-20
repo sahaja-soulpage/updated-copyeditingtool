@@ -17,7 +17,7 @@ import { EyeSlash } from "@styled-icons/bootstrap/EyeSlash";
 import { AuthorizationService, CaptchaService } from "services";
 import { toast } from "react-toastify";
 
-// toast.configure();
+toast.configure();
 
 const authService = new AuthorizationService();
 

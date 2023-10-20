@@ -13,3 +13,6 @@ export interface ISiginInputValues {
 export interface IForgetInputValues {
   email: any;
 }
+export interface IFileuploadInputValues {
+  file_name: any;
+}

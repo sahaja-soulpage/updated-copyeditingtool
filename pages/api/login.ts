@@ -9,7 +9,9 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     return;
   }
 
+  console.log(req.body.email, "req.body", req.body.password);
   // check user exists or not in db
+  console.log(req.body.email, "emailllll");
   const user = await db.user.findUnique({
     where: {
       email: req.body.email,
@@ -24,6 +26,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     },
   });
 
+  console.log(user, "userrrrr");
   if (user) {
     if (!user.password) {
       res.status(400).json({ password: "Please complete your password setup" });

@@ -61,51 +61,6 @@ const UserProfile: FC = () => {
       formData.append("name", values.firstname);
       formData.append("company", values.company);
       formData.append("phone_no", values.contact_number);
-
-      // if (profilePic) {
-      //   const uploadAsset = new FormData();
-      //   uploadAsset.append("name", profilePic.name.split(".")[0].replace(" ", ""));
-      //   uploadAsset.append("asset", profilePic, profilePic.name.split(".")[0].replace(" ", ""));
-
-      //   imageService
-      //     .uploadImage(uploadAsset)
-      //     .then((s3_response) => {
-      //       formData.append("profile_pic", s3_response.url);
-      //       authService
-      //         .updateUserDetails(formData, values.id)
-      //         .then(() => {
-      //           toast.success("details updated successfully");
-      //         })
-      //         .catch((error) => {
-      //           console.log(error);
-      //           toast.error("Something went wrong");
-      //         });
-      //     })
-      //     .catch((error) => {
-      //       console.log(error);
-      //       toast.error("Something went wrong");
-      //     })
-      //     .finally(() => {
-      //       setFieldValue("show", false);
-      //       setLoading(false);
-      //       setFieldValue("isEditable", false);
-      //     });
-      // }
-      // else {
-      //   authService
-      //     .updateUserDetails(formData, values.id)
-      //     .then(() => {
-      //       toast.success("details updated successfully");
-      //     })
-      //     .catch((error) => {
-      //       console.log(error);
-      //     })
-      //     .finally(() => {
-      //       setLoading(false);
-      //       setFieldValue("show", false);
-      //       setFieldValue("isEditable", false);
-      //     });
-      // }
     },
   });
   const handleCancel = () => {
@@ -135,7 +90,7 @@ const UserProfile: FC = () => {
                 <div className="ms-auto">
                   {!values.isEditable ? (
                     <button
-                      className="btn btn-primary px-4 text-white "
+                      className="btn new-file-button px-4 text-white "
                       type="button"
                       onClick={handleEdit}
                     >
@@ -143,7 +98,7 @@ const UserProfile: FC = () => {
                     </button>
                   ) : (
                     <button
-                      className="btn btn-primary px-4 text-white "
+                      className="btn new-file-button px-4 text-white "
                       type="button"
                       onClick={handleSave}
                     >
@@ -263,7 +218,7 @@ const UserProfile: FC = () => {
                 </button>
                 <Button
                   variant="primary"
-                  className="text-white"
+                  className="text-white new-file-button"
                   onClick={handleSubmission}
                   style={{ width: 130 }}
                   loading={loading}
