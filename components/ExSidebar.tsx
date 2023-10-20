@@ -47,7 +47,7 @@ export function Sidebar({ highlights }: Props) {
             <Accordion.Header style={{ background: "#FAFAFA " }} key={id}>
               {" "}
               <div className="d-flex mt-3 p-3 gap-2">
-                <p className="f-16 fw-400 Observ-header">{highlight?.name}</p>
+                <p className="f-16 fw-400 Observ-header">{highlight?.content.text}</p>
 
                 {/* <div className="rounded-circle round-div">{highlight.position.pageNumber}</div> */}
                 <div
