@@ -22,18 +22,18 @@ const MyApp: FC = (props: any) => {
     mutateUserDetails,
     err,
   };
-  useEffect(() => {
-    if (!isLoading) {
-      if (
-        loginStatus === "loggedOut" &&
-        router.pathname !== "/forgotpassword" &&
-        router.pathname !== "/" &&
-        !router.pathname.includes("/resetpassword/")
-      ) {
-        router.push("/");
-      }
-    }
-  }, [profileData, router.asPath, isLoading]);
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     if (
+  //       loginStatus === "loggedOut" &&
+  //       router.pathname !== "/forgotpassword" &&
+  //       router.pathname !== "/" &&
+  //       !router.pathname.includes("/resetpassword/")
+  //     ) {
+  //       router.push("/");
+  //     }
+  //   }
+  // }, [profileData, router.asPath, isLoading]);
   return (
     <React.Fragment>
       <SiteLayout>

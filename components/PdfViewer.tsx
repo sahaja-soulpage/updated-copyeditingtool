@@ -102,7 +102,7 @@ class PdfViewer extends Component<Props, State> {
     const { toggle } = this.props;
 
     return (
-      <div className="row flex-grow-1" style={{ padding: "1rem 2rem" }}>
+      <div className="row flex-grow-1 " style={{ padding: "1rem 2rem" }}>
         <div className={"col-12 " + (toggle ? "" : "col-lg-6")}>
           <div className="overflow-auto col-box">
             {/* <Sidebar

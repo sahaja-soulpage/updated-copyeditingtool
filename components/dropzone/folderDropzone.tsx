@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from "react";
 // import _ from "lodash";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
-
+toast.configure();
 const baseStyle = {
   flex: 1,
   display: "flex",
@@ -31,16 +31,16 @@ const rejectStyle = {
   borderColor: "#ff1744",
 };
 
-function FolderDropzone({ setActualFile, maxNumberOfFiles, acceptedFileExtention }) {
+function FolderDropzone({ setSelectedFile, maxNumberOfFiles, acceptedFileExtention }) {
   const onDrop = useCallback((acceptedFiles, fileRejections) => {
     if (fileRejections.length > 0) {
       console.log(fileRejections, "file rej");
       if (fileRejections.length > maxNumberOfFiles) {
-        toast.error(`Please upload max of ${maxNumberOfFiles} pdf`);
+        toast.error(`Please upload max of ${maxNumberOfFiles} .zip`);
       }
     } else {
       console.log(acceptedFiles, "acceptedFiles");
-      setActualFile(acceptedFiles[0]);
+      setSelectedFile(acceptedFiles[0]);
     }
 
     // selectedTag.selectedImages = acceptedFiles;
@@ -49,7 +49,7 @@ function FolderDropzone({ setActualFile, maxNumberOfFiles, acceptedFileExtention
     onDrop,
     accept: acceptedFileExtention,
     maxFiles: maxNumberOfFiles,
-    maxSize: 4194304,
+    maxSize: 25000000, // 25mb
   });
   const style: any = useMemo(
     () => ({
@@ -76,7 +76,7 @@ function FolderDropzone({ setActualFile, maxNumberOfFiles, acceptedFileExtention
           </a>
         </small>
       </div>
-      <small className="text-center">Only .pdf or word document</small>
+      <small className="text-center">Only .zip files are accepted</small>
     </div>
   );
 }

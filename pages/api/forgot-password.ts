@@ -11,6 +11,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     res.status(405).send({ message: "GET request not allowed" });
     return;
   }
+  // console.log(req.body.email, "email");
 
   // check user exists or not in db
   const user: any = await db.user.findUnique({
@@ -39,6 +40,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     };
 
     try {
+      console.log("userrrr", user, url, form, headers);
       await axios.post(url, form, { headers });
       // Any logic with your data here
       // console.info('Email Sent successfully.');
@@ -46,6 +48,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
         message: "password reset link send to your email address",
       });
     } catch (err) {
+      // console.log(err, "kln error");/
       res.status(400).send(err);
     }
   } else {

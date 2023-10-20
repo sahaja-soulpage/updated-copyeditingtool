@@ -1,11 +1,16 @@
-import React, { FC } from "react";
+import React, { FC, useState, useEffect } from "react";
 import { Button, Container, Image } from "react-bootstrap";
 
 import { DataTable } from "components/data-tables";
-import { NewFile } from "components/modals";
-
+import { UploadFile, DeleteFile } from "components/modals";
+import { CommonService } from "services";
+const uploadfiledata = new CommonService();
 import Link from "next/link";
+import { toast } from "react-toastify";
 const Dashboard: FC = () => {
+  const cardData = new CommonService();
+  const [id, setId] = useState();
+  console.log(id);
   const getStatusStyle = (status) => {
     let textColor = "black";
     let backgroundColor = "";
@@ -18,7 +23,7 @@ const Dashboard: FC = () => {
         backgroundColor = "#FEE1E3";
         dotColor = "#BE0F0F";
         break;
-      case "Success":
+      case "success":
         textColor = "#00C708";
         backgroundColor = "#E7FEE1";
         dotColor = "#00C708";
@@ -42,6 +47,7 @@ const Dashboard: FC = () => {
       sortable: true,
       selector: "FileName",
       style: { cursor: "auto" },
+      cell: (row) => <span> {row.name} </span>,
     },
     {
       name: "Upload Date",
@@ -49,21 +55,22 @@ const Dashboard: FC = () => {
       center: false,
       selector: "UploadDate",
       style: { cursor: "auto" },
+      cell: (row) => <span> {row.updated_at}</span>,
     },
     {
-      name: "Status",
+      name: "status",
       sortable: true,
       center: false,
       selector: "Status",
       style: { cursor: "auto" },
 
       cell: (row) => (
-        <span style={getStatusStyle(row.Status)}>
+        <span style={getStatusStyle(row.status)}>
           <span
             className="status-dot"
-            style={{ backgroundColor: getStatusStyle(row.Status).dotColor }}
+            style={{ backgroundColor: getStatusStyle(row.status).dotColor }}
           ></span>
-          {row.Status}
+          {row.status}
         </span>
       ),
     },
@@ -74,8 +81,20 @@ const Dashboard: FC = () => {
       center: false,
       style: { cursor: "auto" },
       cell: (row) => (
-        <Link href={`/result`} style={{ color: "#6464FF" }}>
-          {row.Classification}
+        <Link href={`${row.id}/summaryreport`} style={{ color: "#6464FF" }}>
+          {row.result[0]?.classification_level}
+        </Link>
+      ),
+    },
+    {
+      name: "Lineart",
+      sortable: true,
+      selector: "Lineart",
+      center: false,
+      style: { cursor: "auto" },
+      cell: (row) => (
+        <Link href={`${row.id}/summaryreport`} style={{ color: "#6464FF" }}>
+          {row.result[0]?.heavy_line_art_level}
         </Link>
       ),
     },
@@ -85,64 +104,111 @@ const Dashboard: FC = () => {
       selector: "Observation",
       center: false,
       style: { cursor: "auto" },
-      cell: (row) => <span style={{ color: "#6464FF" }}>{row.Observation}</span>,
+      cell: () => <span style={{ color: "#6464FF" }}>_</span>,
     },
     {
       name: "Delete",
-      sortable: false,
+      sortable: true,
       selector: "Delete",
       center: false,
       style: { cursor: "auto" },
-      cell: () => (
+      cell: (row) => (
         <Image
           src="icons/delete.svg"
           alt="Delete"
-          // onClick={() => row}
+          onClick={() => {
+            setDeleteFile({ ...deleteFile, model: true });
+            setId(row.id);
+          }}
           style={{ cursor: "pointer" }}
         ></Image>
       ),
     },
   ];
 
-  const data = [
-    {
-      FileName: "Financial Document",
-      UploadDate: "06/01/2023, 12:45",
-      Status: "In-progress",
-      Classification: "Level 2",
-      Observation: "8",
-      Delete: "1",
-    },
-    {
-      FileName: "Financial Document",
-      UploadDate: "06/01/2023, 12:45",
-      Status: "In-progress",
-      Classification: "Level 3",
-      Observation: "8",
-      Delete: "1",
-    },
-    {
-      FileName: "Financial Document",
-      UploadDate: "06/01/2023, 12:45",
-      Status: "Success",
-      Classification: "Level 1",
-      Observation: "8",
-      Delete: "1",
-    },
-    {
-      FileName: "Financial Document",
-      UploadDate: "06/01/2023, 12:45",
-      Status: "Success",
-      Classification: "Level 2",
-      Observation: "8",
-      Delete: "1",
-    },
-  ];
+  // const getLevel = (row) => {
+  //   console.log(row, "kkkk");
+  // };
 
-  // const [count, setCount] = useState({}) as any;
+  // const data = [
+  //   {
+  //     FileName: "Financial Document",
+  //     UploadDate: "06/01/2023, 12:45",
+  //     Status: "In-progress",
+  //     Classification: "Level 2",
+  //     Observation: "8",
+  //     Delete: "1",
+  //   },
+  //   {
+  //     FileName: "Financial Document",
+  //     UploadDate: "06/01/2023, 12:45",
+  //     Status: "In-progress",
+  //     Classification: "Level 3",
+  //     Observation: "8",
+  //     Delete: "1",
+  //   },
+  //   {
+  //     FileName: "Financial Document",
+  //     UploadDate: "06/01/2023, 12:45",
+  //     Status: "Success",
+  //     Classification: "Level 1",
+  //     Observation: "8",
+  //     Delete: "1",
+  //   },
+  //   {
+  //     FileName: "Financial Document",
+  //     UploadDate: "06/01/2023, 12:45",
+  //     Status: "Success",
+  //     Classification: "Level 2",
+  //     Observation: "8",
+  //     Delete: "1",
+  //   },
+  // ];
+
+  const [count, setCount] = useState({}) as any;
+  const [tableData, setTableData] = useState([]);
   const [newState, setNewState] = React.useState({
     model: false,
   });
+  const [deleteFile, setDeleteFile] = React.useState({
+    model: false,
+  });
+  // const refreshTableData = () => {
+  //   fileTableData.getTableData().then((data) => {
+  //     setTableData(data);
+  //   });
+  // };
+  const getData = () => {
+    uploadfiledata
+      .getTableData()
+      .then((data) => {
+        console.log(data, "data");
+        setTableData(data);
+        setCount(data.stats);
+
+        // getTableData();
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Something went wrong");
+      });
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+  useEffect(() => {
+    cardData
+      .CardData()
+      .then((data) => {
+        console.log(data, "data");
+
+        setCount(data);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Something went wrong");
+      });
+  }, []);
 
   return (
     <>
@@ -160,32 +226,31 @@ const Dashboard: FC = () => {
                 <div className="dashboard-white-card w-100 p-4 gap-3">
                   <Image src={"/icons/files.svg"} alt="files"></Image>
                   <p className=" stat-card-title mb-0">Total files</p>
-                  {/* <p className="stat-card-value">{count.total}</p> */}
-                  <p className="stat-card-value">42</p>
+                  <p className="stat-card-value">{count?.total_files_count}</p>
                 </div>
               </div>
               <div className="col-4 g-3 col-md d-flex cursor-pointer">
                 <div className="dashboard-white-card w-100 p-4 gap-3">
                   <Image src={"/icons/completed-files.svg"} alt="completed-files"></Image>
                   <p className=" stat-card-title mb-0">Completed files</p>
-                  {/* <p className="stat-card-value">{count.completed}</p> */}
-                  <p className="stat-card-value">42</p>
+                  <p className="stat-card-value">{count?.completed_files_count}</p>
                 </div>
               </div>
               <div className="col-4 g-3 col-md d-flex cursor-pointer">
                 <div className="dashboard-white-card w-100 p-4 gap-3">
                   <Image src={"/icons/In-progress-files.svg"} alt="In-progress-files"></Image>
                   <p className=" stat-card-title mb-0">In-progress files</p>
-                  {/* <p className=" stat-card-value">{count.inprogress}</p> */}
-                  <p className="stat-card-value">42</p>
+                  <p className="stat-card-value">{count?.in_progress_files_count}</p>
                 </div>
               </div>
               <div className="col-4 g-3 col-md d-flex cursor-pointer">
                 <div className="dashboard-white-card w-100 p-4 gap-3">
                   <Image src={"/icons/layers.svg"} alt="layers"></Image>
                   <p className=" stat-card-title mb-0">Classifications</p>
-                  {/* <p className="stat-card-value">{count.yet_to_start}</p> */}
-                  <p className="stat-card-value">42</p>
+                  <p className="stat-card-value">
+                    L1 - {count?.classification?.L1_count}, L2 - {count?.classification?.L2_count},
+                    L3 - {count?.classification?.L3_count}{" "}
+                  </p>
                 </div>
               </div>
             </div>
@@ -227,12 +292,24 @@ const Dashboard: FC = () => {
                     </Button>
                   </div>
                 </div>
-                <DataTable columns={columns} data={data} />
+                <DataTable
+                  columns={columns}
+                  data={tableData}
+                  row={5}
+                  // refreshTable={refreshTableData}
+                />
               </div>
             </div>
           </Container>
         </div>
-        <NewFile newState={newState} setNewState={setNewState} />
+        <UploadFile newState={newState} setNewState={setNewState} getData={getData} />
+        <DeleteFile
+          deleteFile={deleteFile}
+          setDeleteFile={setDeleteFile}
+          id={id}
+          setId={setId}
+          getData={getData}
+        />
       </div>
     </>
   );

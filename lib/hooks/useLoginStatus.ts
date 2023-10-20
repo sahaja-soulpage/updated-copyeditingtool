@@ -15,7 +15,6 @@ function useLoginStatus(opts?: SWRConfiguration) {
       revalidateOnFocus: false,
     }
   );
-  console.log(data, error, isLoading, "errrrr");
 
   return {
     loginStatus: !isLoading ? (error ? ("loggedOut" as const) : ("loggedIn" as const)) : "loading",
