@@ -1,7 +1,8 @@
-import React, { FC } from "react";
-import { Modal, Button } from "react-bootstrap";
+import React, { FC, useState } from "react";
+import { Modal } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { CommonService } from "services";
+import Button from "react-bootstrap-button-loader";
 interface INewFileProps {
   deleteFile: any;
   setDeleteFile: any;
@@ -13,22 +14,23 @@ interface INewFileProps {
 
 const DeleteFile: FC<INewFileProps> = (props) => {
   const { deleteFile, setDeleteFile, id, setId, getData } = props;
-
+  const [loading, setLoading] = useState(false);
   const deleteProject = new CommonService();
   const handleDelete = (id: number) => {
     setDeleteFile(true);
+    setLoading(true);
     deleteProject
       .deleteFile(id)
       .then(() => {
         setDeleteFile(false);
         getData();
         setId();
-
+        setLoading(false);
         toast.success("Project deleted...!");
       })
       .catch((error: any) => {
         setDeleteFile(true);
-
+        setLoading(false);
         toast.error(error.msg);
         toast.error("Error deleting project");
       });
@@ -59,6 +61,7 @@ const DeleteFile: FC<INewFileProps> = (props) => {
             variant="primary"
             type="button"
             style={{ opacity: 0.9, width: 117 }}
+            loading={loading}
             className="text-white f-17 text-center new-file-button"
             onClick={() => handleDelete(id)}
           >

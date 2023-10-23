@@ -8,9 +8,18 @@ const uploadfiledata = new CommonService();
 import Link from "next/link";
 import { toast } from "react-toastify";
 const Dashboard: FC = () => {
-  const cardData = new CommonService();
+  const maincardData = new CommonService();
   const [id, setId] = useState();
   console.log(id);
+  const [count, setCount] = useState({}) as any;
+  const [tableData, setTableData] = useState([]);
+  const [newState, setNewState] = React.useState({
+    model: false,
+  });
+  const [deleteFile, setDeleteFile] = React.useState({
+    model: false,
+  });
+
   const getStatusStyle = (status) => {
     let textColor = "black";
     let backgroundColor = "";
@@ -165,14 +174,6 @@ const Dashboard: FC = () => {
   //   },
   // ];
 
-  const [count, setCount] = useState({}) as any;
-  const [tableData, setTableData] = useState([]);
-  const [newState, setNewState] = React.useState({
-    model: false,
-  });
-  const [deleteFile, setDeleteFile] = React.useState({
-    model: false,
-  });
   // const refreshTableData = () => {
   //   fileTableData.getTableData().then((data) => {
   //     setTableData(data);
@@ -184,7 +185,6 @@ const Dashboard: FC = () => {
       .then((data) => {
         console.log(data, "data");
         setTableData(data);
-        setCount(data.stats);
 
         // getTableData();
       })
@@ -197,18 +197,16 @@ const Dashboard: FC = () => {
     getData();
   }, []);
   useEffect(() => {
-    cardData
+    maincardData
       .CardData()
       .then((data) => {
-        console.log(data, "data");
-
         setCount(data);
       })
       .catch((error) => {
         console.log(error);
         toast.error("Something went wrong");
       });
-  }, []);
+  }, [tableData]);
 
   return (
     <>
@@ -273,8 +271,8 @@ const Dashboard: FC = () => {
                           type="text"
                           placeholder="Search"
                           aria-label="Search"
-                          // value={search}
-                          // onChange={handleSearch}
+                          // value={searchQuery}
+                          // onChange={handleSearchChange}
                         />
                       </div>
                     </div>
