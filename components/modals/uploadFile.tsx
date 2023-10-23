@@ -125,6 +125,7 @@ const UploadFile: FC<INewFileProps> = (props) => {
                 alt="create new project"
                 className="me-2"
                 onClick={() => {
+                  clearSelectedFile();
                   setNewState({ ...newState, model: false });
                 }}
               />
