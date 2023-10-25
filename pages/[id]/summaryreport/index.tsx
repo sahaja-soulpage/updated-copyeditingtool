@@ -36,7 +36,6 @@ const SummaryReport: FC = () => {
   //   });
   // }, []);
   useEffect(() => {
-    // const calculation = report[0]?.id * 100;
     const calculation = report?.result?.[0]?.confidence_score * 100;
     setResult(calculation);
   }, [report]);
@@ -130,27 +129,43 @@ const SummaryReport: FC = () => {
               </Form.Group>
 
               <h2 className="sub-heading  fw-600 pt-3 ">Results</h2>
+
               <div className="gap-2 d-flex mb-0">
                 <p className="result-para fw-400  mb-0">The document is classified as</p>
-                <p className="level-div p-1  mb-0">{report?.result?.[0]?.classification_level}</p>
+                {report?.result?.[0]?.classification_level ? (
+                  <p className="level-div p-1  mb-0">{report?.result?.[0]?.classification_level}</p>
+                ) : (
+                  <div>null</div>
+                )}
               </div>
+
               <div className="gap-3 d-flex mb-0">
                 <p className="result-para fw-400 mb-0">Confidence score</p>
-                <div className="pt-1">
-                  <ProgressBar
-                    now={result}
-                    className={`${result > 50 ? "custom-progress-bar" : "otherClass"}`}
-                    style={{ width: "150px" }}
-                  />
+                {report?.result?.[0]?.confidence_score ? (
+                  <div>
+                    {/* <div className="pt-1"> */}
+                    <ProgressBar
+                      now={result}
+                      className={`${result > 50 ? "custom-progress-bar" : "otherClass"}`}
+                      style={{ width: "150px" }}
+                    />
+                    {/* </div> */}
+
+                    <p className="result-para fw-400 mb-0">
+                      {report?.result?.[0]?.confidence_score.toFixed(2) * 100}%
+                    </p>
+                  </div>
+                ) : (
+                  <div>null</div>
+                )}
+              </div>
+
+              {report?.result?.[0]?.heavy_line_art_level && (
+                <div className="gap-2 d-flex mb-0">
+                  <p className="result-para fw-400  mb-0">The document is classified as</p>
+                  <p className="level-div p-1  mb-0">{report?.result?.[0]?.heavy_line_art_level}</p>
                 </div>
-                <p className="result-para fw-400 mb-0">
-                  {report?.result?.[0]?.confidence_score.toFixed(2) * 100}%
-                </p>
-              </div>
-              <div className="gap-2 d-flex mb-0">
-                <p className="result-para fw-400  mb-0">The document is classified as</p>
-                <p className="level-div p-1  mb-0">{report?.result?.[0]?.heavy_line_art_level}</p>
-              </div>
+              )}
               <hr></hr>
               <h2 className="sub-heading  fw-600 pt-3 ">Density Extraction</h2>
               <div className="d-flex align-items-center mb-4">
